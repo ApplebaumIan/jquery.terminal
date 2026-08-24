@@ -1,3 +1,422 @@
+## 2.47.0
+### Breaking
+* echo command echoes a string again (revert of 2.46.0), so the command no longer appears as a function in `export_view`
+### Features
+* add support for heredocs in command processing
+* support promise as interperter
+* echo `formatters` option now accepts `'command'` to apply command formatters
+### Bugfix
+* fix applying formatters to echo command [#1052](https://github.com/jcubic/jquery.terminal/issues/1052)
+* keep each partial (`echo` with `newline: false`) `raw` and `formatters` options when the line is re-rendered on redraw, `refresh` and `import_view` [#1052](https://github.com/jcubic/jquery.terminal/issues/1052)
+* better error thrown when calling `Termina::export_view()` when output not ready
+
+## 2.46.2
+### Bugfix
+* fix clipboard on `inputStyle == 'contenteditable'` [#1048](https://github.com/jcubic/jquery.terminal/issues/1048)
+* fix exception when accessing `event.touches.length`
+* fix exec with raw prompt don't show up in `get_output()`
+* fix exec leaking html when using typing animation with raw prompt
+
+## 2.46.1
+### Bugfix
+* fix mobile detection [#1047](https://github.com/jcubic/jquery.terminal/issues/1047)
+* fix clipboard on `inputStyle == 'contenteditable'` [#1048](https://github.com/jcubic/jquery.terminal/issues/1048)
+
+## 2.46.0
+### Breaking
+* echo command now echoes a function, and it will appear in export_view
+### Features
+* terminal::animation callback now has terminal as context [#1020](https://github.com/jcubic/jquery.terminal/issues/1020)
+* add option to use `raw` in prompt
+* Improve the library on Meta Quest Browser[#1023](https://github.com/jcubic/jquery.terminal/issues/1023)
+* allow to change `inputStyle` to contenteditable for debugging mobile on desktop
+* add `$.terminal.debug` hook and `terminal-debug` class for internal debugging of cmd
+* add `--ansi-line-base` CSS variable to control line height of ANSI Art [#837](https://github.com/jcubic/jquery.terminal/issues/837)
+### Bugfix
+* fix CTRL+E in Brave [#1016](https://github.com/jcubic/jquery.terminal/issues/1016)
+* fix processing images in less [#970](https://github.com/jcubic/jquery.terminal/issues/970)
+* fix updating echo functions that return HTML (with `raw: true`) [#1029](https://github.com/jcubic/jquery.terminal/issues/1029)
+* fix `--terminal-scrollbar` CSS variable
+* fix refresh of echo command when formatters change [#1013](https://github.com/jcubic/jquery.terminal/issues/1013)
+* fix swallowing echo `newline: false` with a function [#1037](https://github.com/jcubic/jquery.terminal/issues/1037)
+* fix swallowing of finalize in echo without newline [#769](https://github.com/jcubic/jquery.terminal/issues/769)
+* fix rounding issues in `animation.js` rendering
+
+## 2.45.1/2.45.2
+### Bugfix
+* fix a broken prompt in Brave [#1018](https://github.com/jcubic/jquery.terminal/issues/1018)
+
+## 2.45.0
+### Features
+* add `id` option that allow to create same terminal using hot reload [#978](https://github.com/jcubic/jquery.terminal/issues/978)
+* allow using Object URLs in links [#982](https://github.com/jcubic/jquery.terminal/issues/982)
+* experimental `--cols` CSS variable [#956](https://github.com/jcubic/jquery.terminal/issues/956)
+* add `terminal::lines()` [#966](https://github.com/jcubic/jquery.terminal/issues/966)
+* add small ASCII Art to signature [#972](https://github.com/jcubic/jquery.terminal/issues/972)
+* add `termina::output_ready()` [#987](https://github.com/jcubic/jquery.terminal/issues/987) [#1000](https://github.com/jcubic/jquery.terminal/issues/1000)
+* add `figlet.js` helper extension
+* update terminal::geometry [#995](https://github.com/jcubic/jquery.terminal/issues/995)
+### Bugfix
+* fix `terminal::login()` when user already authenticated [#980](https://github.com/jcubic/jquery.terminal/issues/980)
+* improve mobile support
+* ignore empty command in Pipe extension [#984](https://github.com/jcubic/jquery.terminal/issues/984)
+* fix processing Hex HTML entities [#992](https://github.com/jcubic/jquery.terminal/issues/992)
+* fix returning Terminal instance from interpreter [#994](https://github.com/jcubic/jquery.terminal/issues/994)
+* fix removing blank lines when using `import_view()` [#1007](https://github.com/jcubic/jquery.terminal/issues/1007)
+* fix fallback interpreter return value [#1008](https://github.com/jcubic/jquery.terminal/issues/1008)
+* fix for external terminal style [#1009](https://github.com/jcubic/jquery.terminal/issues/1009)
+* fix redraw when echo async function which throws [#998](https://github.com/jcubic/jquery.terminal/issues/998)
+* fix browser shorcuts when terminal is paused [#1005](https://github.com/jcubic/jquery.terminal/issues/1005)
+* display exception from sync echo function [#997](https://github.com/jcubic/jquery.terminal/issues/997)
+* fix text on hover links when background is transparent [#990](https://github.com/jcubic/jquery.terminal/issues/990)
+* hide clipboard textarea from selection [#1015](https://github.com/jcubic/jquery.terminal/issues/1015)
+
+## 2.44.1
+### Bugfix
+* fix errors with form autofill outside of the terminal [#977](https://github.com/jcubic/jquery.terminal/issues/977)
+
+## 2.44.0
+### Features
+* new API `terminal::animation()` and `terminal::delay()` [#683](https://github.com/jcubic/jquery.terminal/issues/683)
+* add images in less now have `terminal-less` class
+* add `execHistory` main option and `history` option to `terminal::exec()` [#745](https://github.com/jcubic/jquery.terminal/issues/745)
+* add helper `$.terminal.remove_formatter`
+* escape xml in `$.terminal.escape_formatting` when xml formatter is used [#973](https://github.com/jcubic/jquery.terminal/issues/973)
+### Bugfix
+* fix number of rows when using different `--size` [#969](https://github.com/jcubic/jquery.terminal/issues/969)
+* fix hidden cursor when using command that change `--size` [#968](https://github.com/jcubic/jquery.terminal/issues/968)
+* fix command prop in `export_view()` when in command [#967](https://github.com/jcubic/jquery.terminal/issues/967)
+* fix processing images in less [#970](https://github.com/jcubic/jquery.terminal/issues/970)
+* fix passing alt and class for image in less
+* fix width of images in less when image is bigger than the terminal
+* fix line-height of the lines to render less image slices properly
+* fix flashing of old prompt after prompt animation [#976](https://github.com/jcubic/jquery.terminal/issues/976)
+
+## 2.43.2
+### Bugfix
+* fix scroll to bottom when using `terminal::import_view`
+
+## 2.43.1
+### Bugfix
+* fix height when not using `--rows` [#962](https://github.com/jcubic/jquery.terminal/issues/962)
+
+## 2.43.0
+### Breaking
+* echo of undefined or Promise that resolve to undefined no longer display string undefined
+### Features
+* add support for `--rows` CSS custom property [#956](https://github.com/jcubic/jquery.terminal/issues/956)
+* add aborting signals [#940](https://github.com/jcubic/jquery.terminal/issues/940)
+### Bugfix
+* fix CMD update performance issue [#961](https://github.com/jcubic/jquery.terminal/issues/961)
+* don't reflow the reflow the cursor on update [#932](https://github.com/jcubic/jquery.terminal/issues/932)
+* fix unexpected uncaught exceptions in promises
+* fix skip/skip_stop return value and add types
+* fix recursive call to echo in renderHandler [#733](https://github.com/jcubic/jquery.terminal/issues/733)
+
+## 2.42.2
+### Bugfix
+* actual fix for blank lines typing animation [#946](https://github.com/jcubic/jquery.terminal/issues/946)
+
+## 2.42.1
+### Bugfix
+* fix line wrapping when calling multiple echo `newline:false` [#952](https://github.com/jcubic/jquery.terminal/issues/952)
+* fix cursor position when echo `newline:false` fill the line
+* fix running typing animation on empty terminal [#950](https://github.com/jcubic/jquery.terminal/issues/950)
+* get rid of canvas warning from images in less [#955](https://github.com/jcubic/jquery.terminal/issues/955)
+* fix update with newline after echo without it [#954](https://github.com/jcubic/jquery.terminal/issues/954)
+
+## 2.42.0
+### Features
+* add reverse style to formatting and XML [#943](https://github.com/jcubic/jquery.terminal/issues/943)
+* add XML formatting targets [#944](https://github.com/jcubic/jquery.terminal/issues/944)
+### Bugfix
+* fix typing animation on emtpy lines [#946](https://github.com/jcubic/jquery.terminal/issues/946)
+* fix skip typing animation [#945](https://github.com/jcubic/jquery.terminal/issues/945)
+* fix use of `$.terminal.apply_formatters` with prism
+
+## 2.41.2
+### Bugfix
+* fix commands in pipe operator with non string arguments
+* fix text selection of raw HTML [#939](https://github.com/jcubic/jquery.terminal/issues/939)
+* fix resume of exec on auth with sync token
+
+## 2.41.1
+### Bugfix
+* fix paused terminal when echo broken image
+* fix returning String instance from interpreter
+
+## 2.41.0
+### Features
+* allow to use class and other attributes in style XML tags (like `<bold/>` or `<glow/>`)
+* allow usage of String instance in greetings [#936](https://github.com/jcubic/jquery.terminal/issues/936)
+### Bugfix
+* fix alt image attribute
+* fix visible formatting in prompt after animated exec [#938](https://github.com/jcubic/jquery.terminal/issues/938)
+* fix visible formatting in prompt during typing animation
+* cleanup duplicated attributes from XML formatter output
+* fix zoom on mobile (PR by [Riccardo Mura](https://github.com/cowuake)) [#935](https://github.com/jcubic/jquery.terminal/pull/935)
+
+## 2.40.6
+### Bugfix
+* fix resize of text from long animation after finish
+
+## 2.40.5
+### Bugfix
+* fix visible prompt during multiline typing animation [#934](https://github.com/jcubic/jquery.terminal/issues/934)
+
+## 2.40.4
+### Bugfix
+* fix flash of old dynamic prompt on enter [#926](https://github.com/jcubic/jquery.terminal/issues/926)
+
+## 2.40.3
+### Bugfix
+* fix `new_formatter` to allow usage of XML tags in formatter
+
+## 2.40.2
+### Bugfix
+* fix usage with libraries that invoke fake click events [#931](https://github.com/jcubic/jquery.terminal/issues/931)
+
+## 2.40.1
+### Bugfix
+* fix visible formatting in prompt when return string from command [#922](https://github.com/jcubic/jquery.terminal/issues/922)
+
+## 2.40.0
+### Features
+* don't force any attributes when using xml (`span`, `img`, and `a` tags) [#913](https://github.com/jcubic/jquery.terminal/issues/913)
+* alow using attributes in color xml tags [#924](https://github.com/jcubic/jquery.terminal/issues/924)
+### Bugfix
+* fix init and resize of long prompt [#919](https://github.com/jcubic/jquery.terminal/issues/919)
+* fix occasional selecting Accessibility label (about clipboard textarea) in CMD
+* fix sync commands and dynamic prompt [#923](https://github.com/jcubic/jquery.terminal/issues/923)
+* fix calling `onCommandChange` when command don't change
+* fix sequence of animations in echo without newline [#930](https://github.com/jcubic/jquery.terminal/issues/930)
+* fix ignoring colors and style when using JSON attributes in formatting
+
+## 2.39.3
+### Bugfix
+* fix broken full screen terminal height on Desktop
+
+## 2.39.2
+### Bugfix
+* fix when CSS is loaded after creation of the terminal (mostly for ReactJS)
+
+## 2.39.1
+### Bugfix
+* fix visible CMD textarea when page use box-shadow
+
+## 2.39.0
+### Features
+* Add support for jQuery 4.0
+
+## 2.38.0
+### Breaking
+* `onInit` runs before login
+### Features
+* add support for BigInt numbers when parsing commands
+* add `--line-thickness` CSS variable to cursor animation
+* improve performance with long typing animations [#820](https://github.com/jcubic/jquery.terminal/issues/820)
+### Bugfix
+* fix `\t` characters in ascii_table [#902](https://github.com/jcubic/jquery.terminal/issues/902)
+* fix race condition in refresh and flush [#897](https://github.com/jcubic/jquery.terminal/issues/897)
+* always execute function prompt after login [#898](https://github.com/jcubic/jquery.terminal/issues/898)
+* fix background color in prompt [#906](https://github.com/jcubic/jquery.terminal/issues/906)
+* update prism code to match function Prism.highlight [#905](https://github.com/jcubic/jquery.terminal/issues/905)
+* fix keepWords during typing animation [#867](https://github.com/jcubic/jquery.terminal/issues/867)
+* fix leading spaces during animation [#825](https://github.com/jcubic/jquery.terminal/issues/825)
+* fix edge case of of multiple echo with `newline: false` [#878](https://github.com/jcubic/jquery.terminal/issues/878)
+
+## 2.37.2
+### Bugfix
+* fix for TypeScript from [Antoine](https://github.com/antoineol) ([#896](https://github.com/jcubic/jquery.terminal/pull/896)) and [KiddoV](https://github.com/KiddoV) ([#901](https://github.com/jcubic/jquery.terminal/pull/901))
+
+## 2.37.1
+### Bugfix
+* fix wrong calculation of characters with custom font [#892](https://github.com/jcubic/jquery.terminal/issues/892)
+
+## 2.37.0
+### Features
+* add `rpc` interceptor [#883](https://github.com/jcubic/jquery.terminal/issues/883)
+* wait for the custom fonts to load [#892](https://github.com/jcubic/jquery.terminal/issues/892)
+### Bugfix
+* fix CMD wrapping when prompt is empty [#882](https://github.com/jcubic/jquery.terminal/issues/882)
+* fix paused terminal when using array as interpreter and RPC without system describe
+* fix edge case of disappearing content after refresh [#871](https://github.com/jcubic/jquery.terminal/issues/871)
+* fix rendering empty lines prompt and during typing animation [#890](https://github.com/jcubic/jquery.terminal/issues/890)
+* fix rendering links in prompt and during typing animation [#891](https://github.com/jcubic/jquery.terminal/issues/891)
+
+## 2.36.0
+### Features
+* split_equal accept optional object as 3rd argument with two options `trim` and `keepWords`
+* add `--padding` CSS Variable [#874](https://github.com/jcubic/jquery.terminal/issues/874)
+* add CSS transition to links [#870](https://github.com/jcubic/jquery.terminal/issues/870)
+### Bugfix
+* fix leading spaces in text wrapping
+* fix glitch in typing animation when text have hyphen
+* fix regression in cursor animation color [#869](https://github.com/jcubic/jquery.terminal/issues/869)
+* fix `term::geometry()` [#873](https://github.com/jcubic/jquery.terminal/issues/873)
+* fix types for `term::push()` [#877](https://github.com/jcubic/jquery.terminal/issues/877)
+
+## 2.35.3
+### Bugfix
+* fix object returned from the interpreter [#857](https://github.com/jcubic/jquery.terminal/issues/857)
+* fix greetings that use a callback [#855](https://github.com/jcubic/jquery.terminal/issues/855)
+* fix behavior of `onBeforeLogin` [#856](https://github.com/jcubic/jquery.terminal/issues/856)
+
+## 2.35.2
+### Bugfix
+* fix mobile Chrome and Firefox [#846](https://github.com/jcubic/jquery.terminal/issues/846)
+
+## 2.35.1
+* Unpublished because of technical issues
+
+## 2.35.0
+### Breaking
+* replace `imagePause` with `externalPause`
+### Features
+* add bulletproof solution for generic selector (`*` or `div`) to overwrite terminal style
+* use jsDelivr for emoji that is way faster [#810](https://github.com/jcubic/jquery.terminal/issues/810)
+* pause terminal when loading iframes [#816](https://github.com/jcubic/jquery.terminal/issues/816)
+* allow to change or remove target and rel tags on links with JSON attributes
+* allow using transparent background [#698](https://github.com/jcubic/jquery.terminal/issues/698)
+* register CSS properties so you can use CSS Transition on terminal colors [#808](https://github.com/jcubic/jquery.terminal/issues/808)
+* add terminal::blur alias [#813](https://github.com/jcubic/jquery.terminal/issues/813)
+* allow to change scrollbar color with CSS property
+* add `process_formatting` static helper function
+* add `FormattingCanvasRenderer` for color animation [#819](https://github.com/jcubic/jquery.terminal/issues/819)
+### Bugfix
+* fix up/down arrows when moving inside command that has emoji [#608](https://github.com/jcubic/jquery.terminal/issues/608)
+* fix pausing when loading images [#807](https://github.com/jcubic/jquery.terminal/issues/807)
+* fix scroll to bottom on echo images and iframes
+* fix jump to the end of the command when clicking below cmd [#814](https://github.com/jcubic/jquery.terminal/issues/814)
+* fix selection overlap previous line
+* fix scroll to bottom while animating [#791](https://github.com/jcubic/jquery.terminal/issues/791)
+* fix rendering of sixel images [#824](https://github.com/jcubic/jquery.terminal/issues/824)
+* fix handling promises in renderHandler
+* fix scroll to bottom during animation [#791](https://github.com/jcubic/jquery.terminal/issues/791)
+* fix `terminal::is_bottom` when using intersection observer
+* fix processing \r in Linux output of unix_formatting
+
+## 2.34.0
+### Features
+* add `term::get_mask` method [#785](https://github.com/jcubic/jquery.terminal/issues/785)
+* add `onReady` event to `term::read` [#779](https://github.com/jcubic/jquery.terminal/issues/779)
+* improve performance of typing animation
+* add `prefers-reduced-motion` into main CSS
+* pause terminal when images are loading [#802](https://github.com/jcubic/jquery.terminal/issues/802)
+* allow disable scroll to bottom on resume [#800](https://github.com/jcubic/jquery.terminal/issues/800)
+### Bugfix
+* fix line wrapping of cmd when using echo: newline [#773](https://github.com/jcubic/jquery.terminal/issues/773)
+* fix text selection on echo without newline text
+* fix rejected promises from echo [#790](https://github.com/jcubic/jquery.terminal/issues/790)
+* improve TypeScript types for typing animation [#794](https://github.com/jcubic/jquery.terminal/issues/794)
+* add missing mousewheel typing animation [#795](https://github.com/jcubic/jquery.terminal/issues/795)
+* fix iterate formatting over closing bracket [#792](https://github.com/jcubic/jquery.terminal/issues/792)
+* fix resolving promise from echo typing animation when previous command was async [#797](https://github.com/jcubic/jquery.terminal/issues/797)
+* fix double exception in terminal::destroy
+* fix double call to finalize function when echo DOM nodes
+* fix `$.terminal.substring` [#792](https://github.com/jcubic/jquery.terminal/issues/792)
+
+## 2.33.3
+### Bugfix
+* fix newline in minified js file [#780](https://github.com/jcubic/jquery.terminal/issues/780)
+
+## 2.33.2
+### Bugfix
+* fix scroll to bottom [#777](https://github.com/jcubic/jquery.terminal/issues/777)
+
+## 2.33.1
+### Bugfix
+* fix padding removed by minifier
+
+## 2.33.0
+### Features
+* add a color and background attributes to the font tag in the xml formatter
+* add `terminal-none` animation
+* allow to easily change border-radius on terminal [#766](https://github.com/jcubic/jquery.terminal/issues/766)
+* add clear_cache to cmd
+### Bugfix
+* fix flicker of dynamic prompt on enter [#757](https://github.com/jcubic/jquery.terminal/issues/757)
+* fix re-rendering of jQuery/DOM nodes [#759](https://github.com/jcubic/jquery.terminal/issues/759)
+* fix regression in less + images
+* fix embedding the Terminal inside SVG [#744](https://github.com/jcubic/jquery.terminal/issues/744)
+* fix when the login function is not async
+* fix calling login_name in dynamic prompt
+* fix masking command on typing animation [#770](https://github.com/jcubic/jquery.terminal/issues/770)
+* fix selection/click on text that was echo without newline (when prompt is still in same line)
+* fix exception when outputLimit is used [#776](https://github.com/jcubic/jquery.terminal/issues/776)
+* fix showing links for emails like prompt [#768](https://github.com/jcubic/jquery.terminal/issues/768)
+* fix line wrapping when text between formatting have brackets [#772](https://github.com/jcubic/jquery.terminal/issues/772)
+
+## 2.32.1
+### Bugfix
+* leading spaces with echo + keepWords [#754](https://github.com/jcubic/jquery.terminal/issues/754)
+* fix loading hidden terminal
+
+## 2.32.0
+### Features
+* add insert typing animation
+* add `--text-shadow` css variable
+* new API method `parse_formatting`
+* allow to use terminal style of external element [#731](https://github.com/jcubic/jquery.terminal/issues/731)
+### Bugfix
+* fix calculating number of rows (affecting less command)
+* fix glow with prism and error messages [#729](https://github.com/jcubic/jquery.terminal/issues/729)
+* fix prism and typing animation [#726](https://github.com/jcubic/jquery.terminal/issues/726)
+* fix various TypeScript typing errors
+* fix spacing between lines
+* fix wrong mouse cursor on terminal cursor and character before
+* fix catastrophic reflow when executing hundreds of echos in a loop
+* fix empty lines in prompt (visible when using typing animation) [#734](https://github.com/jcubic/jquery.terminal/issues/734)
+* fix trimming whitespace with echo keep_words [#738](https://github.com/jcubic/jquery.terminal/issues/738)
+* fix JSON working on processing nested formatting with html entities [#735](https://github.com/jcubic/jquery.terminal/issues/735)
+* fix echo array of numbers [#747](https://github.com/jcubic/jquery.terminal/issues/747)
+* improve performance when terminal don't have height
+* fix partial text (echo without newline) rendering [#751](https://github.com/jcubic/jquery.terminal/issues/751)
+
+## 2.31.1
+### Bugfix
+* fixing low severity self XSS with potential more security implications [#727](https://github.com/jcubic/jquery.terminal/issues/727)
+
+## 2.31.0
+### Breaking
+* remove undocumented `echo_command` (that was used by old `echo_newline` extension)
+### Features
+* scroll to bottom for each line in multiline typing animation
+* allow to use `--glow: 1` with default animation
+* new API `terminal::enter` same as echo_command but supports animation
+* add global option `execAnimationDelay` default - 100
+* make execAnimation work only with execHash [#723](https://github.com/jcubic/jquery.terminal/issues/723)
+### Bugfix
+* fix prompt that return string or promise (in animation and set_prompt) [#724](https://github.com/jcubic/jquery.terminal/issues/724)
+* fix formatting in typing animation [#721](https://github.com/jcubic/jquery.terminal/issues/721)
+* fix formatting colors and `--glow` [#725](https://github.com/jcubic/jquery.terminal/issues/725)
+* fix record stop command being recorded [#719](https://github.com/jcubic/jquery.terminal/issues/719)
+
+## 2.30.2
+### Bugfix
+* fix animated exec array with sync commands [#722](https://github.com/jcubic/jquery.terminal/issues/722)
+
+## 2.30.1
+### Bugfix
+* fix record built-in commands in URL hash
+
+## 2.30.0
+### Features
+* add `span` to xml formatting
+* allow to use class attribute in XML formatting (`span`, `link`, and `img`)
+* new API methods `clear_buffer()` and `get_output_buffer()` [#717](https://github.com/jcubic/jquery.terminal/issues/717)
+### Bugfix
+* fix bug on Android with GBoard keyboard [#693](https://github.com/jcubic/jquery.terminal/issues/693)
+* fix refresh when scrollbar appear (using `scrollbar-gutter`)
+* fix link color to pass WCAG contrast ratio
+* remove tabindex attribute on links
+* add label to clipboard textarea for a11y
+* allow to escape angle brackets in XML formatting [#710](https://github.com/jcubic/jquery.terminal/issues/710)
+* fix black line before the image [#708](https://github.com/jcubic/jquery.terminal/issues/708)
+* fix scroll to bottom when echo an image [#716](https://github.com/jcubic/jquery.terminal/issues/716)
+* fix multiple echo with `!flush && !newline` [#709](https://github.com/jcubic/jquery.terminal/issues/709)
+* fix updating hash for long async commands [#703](https://github.com/jcubic/jquery.terminal/issues/703)
+
 ## 2.29.5
 ### Bugfix
 * fix empty prompt when no wcwidth is included
@@ -26,7 +445,7 @@
 * fix echo newline when one of the values is promise or function
 * fix invalid css when partial output is no longer partial
 * add padding to terminal size i `term::geometry()` [#686](https://github.com/jcubic/jquery.terminal/issues/686)
-* clear extended commands from view when calling `import_view` [#690](https://github.com/jcubic/jquery.terminal/issues/7690)
+* clear extended commands from view when calling `import_view` [#690](https://github.com/jcubic/jquery.terminal/issues/690)
 
 ## 2.29.1
 ### Bugfix
@@ -419,7 +838,7 @@
 * fix links from formatters in cmd
 * fix images from formatters in cmd [#519](https://github.com/jcubic/jquery.terminal/issues/519)
 * fix less [#522](https://github.com/jcubic/jquery.terminal/issues/522)
-* fix recursive error when echo finalize throwed exception [#524](https://github.com/jcubic/jquery.terminal/issues/524)
+* fix recursive error when echo finalize threw exception [#524](https://github.com/jcubic/jquery.terminal/issues/524)
 * fix prism - xml nested formatting and weird wrapping [#523](https://github.com/jcubic/jquery.terminal/issues/523), [#410](https://github.com/jcubic/jquery.terminal/issues/410)
 * limit number of characters in click on exception line [#525](https://github.com/jcubic/jquery.terminal/issues/525)
 * fix less search clear on resize [#528](https://github.com/jcubic/jquery.terminal/issues/528)
@@ -536,7 +955,7 @@
 
 ## 2.3.0
 ### Features
-* add experimental $.terminal.pipe function
+* add experimental `$.terminal.pipe` function
 * allow to return string from onPaste (not only a promise)
 * add CTRL+Home and CTRL+End keys + HOME and END move cursor to the end and beginning of the line [#479](https://github.com/jcubic/jquery.terminal/issues/479)
 * zoom page when using mousewheel + CTRL key (browser default) [#468](https://github.com/jcubic/jquery.terminal/issues/468)
@@ -634,7 +1053,7 @@
 * fix escape bracket in command line
 * fix relative and absolute urls with default `anyLinks: false`
 * fix android and iPhone issues [#443](https://github.com/jcubic/jquery.terminal/issues/443) [#414](https://github.com/jcubic/jquery.terminal/issues/414)
-* fix ANSI escapes in unix_formatting [$444](https://github.com/jcubic/jquery.terminal/issues/444)
+* fix ANSI escapes in unix_formatting [#444](https://github.com/jcubic/jquery.terminal/issues/444)
 * fix jumping cursor when there are no text before cursor line in Chrome
 * fix selection menu in latest Android
 * fix wrong number of chars per line when insert called after init and scrollbar appear
@@ -698,7 +1117,7 @@
 * embed emoji regex by Mathias Bynens for better emoji detection
 * allow to execute extended commands including terminal and cmd methods from formatters
 * support for true colors (24bit) in unix formatting [#433](https://github.com/jcubic/jquery.terminal/issues/433)
-* expose split_characters in $.terminal namespace
+* expose split_characters in `$.terminal` namespace
 * cmd commands option functions to have cmd as this context
 
 ### Bugfix
@@ -782,7 +1201,7 @@
 ### Features
 * add TypeScript definition file
 * update formatters API to have a way to return position after replace from function formatter
-* regex formatters and $.tracking_replace now accept function as replacement
+* regex formatters and `$.tracking_replace` now accept function as replacement
 * update unix formatters to use new API so they work with command line
 * set exit to false if no login provided
 
@@ -796,8 +1215,8 @@
 ## 1.18.0
 ### Feature
 * looping regex formatters that replace until they don't match the regex
-* add tracking_replace to $.terminal namespace
-* $.terminal.syntax helper
+* add tracking_replace to `$.terminal` namespace
+* `$.terminal.syntax` helper
 * new language for prism: "website" that handle html, javascript and css syntax
 
 ### Bugs
@@ -810,10 +1229,10 @@
 ### Features
 * add ascii_table utility in separated file
 * per user command line history
-* add $.terminal.parse_options which return same object as yargs parser
-* $.jrpc helper now return its own created promise instead of $.ajax
+* add `$.terminal.parse_options` which return same object as yargs parser
+* `$.jrpc` helper now return its own created promise instead of `$.ajax`
 * add wcwidth as dependency so it will always show wider characters correctly (in browsers will work the same as optional)
-* expose terminal exception in $.terminal namespace
+* expose terminal exception in `$.terminal` namespace
 * new API option doubleTab [#405](https://github.com/jcubic/jquery.terminal/issues/405)
 
 ### Bugfix
@@ -838,7 +1257,7 @@
 ### Bugs
 * fix paste/select all when click below .cmd
 * second fix to jumping on right click (context menu) [#399](https://github.com/jcubic/jquery.terminal/issues/399)
-* change $.terminal.prism_formatting to $.terminal.prism
+* change `$.terminal.prism_formatting` to `$.terminal.prism`
 
 ## 1.16.0
 
@@ -855,8 +1274,8 @@
 
 ### Bugs
 * fix resizer in Firefox [#395](https://github.com/jcubic/jquery.terminal/issues/395)
-* fix $.terminal.columns and echo array [#394](https://github.com/jcubic/jquery.terminal/issues/394)
-* fix $.terminal.columns for wider characters and terminal formatting
+* fix `$.terminal.columns` and echo array [#394](https://github.com/jcubic/jquery.terminal/issues/394)
+* fix `$.terminal.columns` for wider characters and terminal formatting
 * fix rows() when using --size [#398](https://github.com/jcubic/jquery.terminal/issues/398)
 * fix null in JSON hash
 * fix jumping on right click (context menu) [#399](https://github.com/jcubic/jquery.terminal/issues/399)
@@ -1003,7 +1422,7 @@
 
 ## 1.9.0
 ### Features
-* new api utils $.terminal.length and $.terminal.columns
+* new api utils `$.terminal.length` and `$.terminal.columns`
 * echo array (resizable in columns that fit the width, using settings.tabs as pad right)
 * callback function parseObject that's called on object different then string (on render)
 * calling option method with numRows or numChars redraw terminal output (for testing)
@@ -1064,7 +1483,7 @@
 ## 1.7.0
 ### Features
 * add option caseSensitiveAutocomplete default to true [#332](https://github.com/jcubic/jquery.terminal/issues/332)
-* expose Stack/Cycle/History in $.terminal so they can be tested
+* expose Stack/Cycle/History in `$.terminal` so they can be tested
 * make `:focus-within .prompt` selector work with terminal (work also on codepen)
 ### Bugs
 * fix jumping of terminal when created one after another and changing the one that have focus in Edge
@@ -1288,7 +1707,7 @@
 * add option softPause to control pause visible option - it don't hide the prompt when set to true
 * add wordAutocomplete option (default true)
 * add complete and `before_cursor` api methods and use it for autocomplete
-* formatting for command line (you can't type formatting but you can use $.terminal.formatters to
+* formatting for command line (you can't type formatting but you can use `$.terminal.formatters` to
 * format command you're writing)
 * new option formatters for echo (error method by default disable formatters)
 * interpeter and terminal accept extra option that can be use in onPop or onPush
@@ -1556,8 +1975,8 @@
 * paste text from selection using middle mouse button
 * fix login, history and exec
 * disable few things when in login function
-* all Strings are in $.terminal.defaults.strings
-* more functions in $.terminal object
+* all Strings are in `$.terminal.defaults.strings`
+* more functions in `$.terminal` object
 
 ## 0.7.12
 * fix terminal when start as invisible, rest property to parseCommand

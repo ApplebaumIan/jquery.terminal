@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-var https = require('https');
-var path = require('path');
-var fs = require('fs');
-var argv = require('optimist').argv;
-var request = require('request');
+import path from 'path';
+import fs from 'fs';
+import fetch from 'node-fetch';
+import lily from '@jcubic/lily';
 
+const argv = lily(process.argv.slice(2));
 
 function split_equal(array, length) {
     var result = [];
@@ -22,32 +22,32 @@ function split_equal(array, length) {
 }
 
 function get(url, query) {
-    var options = {
-        url: url,
-        qs: query,
+    const options = {
         headers: {
             'User-Agent': 'Node.js'
         }
     };
+
     if (argv.auth) {
-        var [user,pass] = argv.auth.split(':');
-        options.auth = {
-            user,
-            pass
-        };
+        const [user, pass] = argv.auth.split(':');
+        options.headers.Authorization = `Basic ${Buffer.from(`${user}:${pass}`).toString('base64')}`;
     }
-    //return;
-    return new Promise(function(resolve, reject) {
-        request(options, function(error, res, body) {
-            if (res.statusCode == 200) {
-                resolve(JSON.parse(body));
-            } else if (+res.headers['x-ratelimit-remaining'] == 0) {
-                var date = new Date(+res.headers['x-ratelimit-reset']*1000);
-                reject('Rate limit util ' + date);
-            } else {
-                reject('Error code ' + res.statusCode);
-            }
-        });
+
+    const queryString = new URLSearchParams(query).toString();
+
+    if (queryString) {
+        url = `${url}?${queryString}`;
+    }
+
+    return fetch(url, options).then(response => {
+        if (response.ok) {
+            return response.json();
+        } else if (response.headers.get('x-ratelimit-remaining') === '0') {
+            const date = new Date(parseInt(response.headers.get('x-ratelimit-reset')) * 1000);
+            throw new Error('Rate limit util ' + date);
+        } else {
+            throw new Error('Error code ' + response.status);
+        }
     });
 }
 
@@ -99,7 +99,7 @@ function get_api(argv) {
 }
 
 
-if ((argv.f && argv.m) || (argv.u && argv.r)) {
+if (((argv.f && argv.m) || (argv.u && argv.r)) && argv.r) {
     (argv.f ? get_file(argv.f) : get_api(argv)).then(function(contributors) {
         if (argv.m) {
             var split = split_equal(contributors, 7);
@@ -109,7 +109,7 @@ if ((argv.f && argv.m) || (argv.u && argv.r)) {
                     return '[<img src="' + contributor.avatar + '" width="100px;"/>' +
                         '<br /><sub>' + contributor.name + '</sub>](' +
                         contributor.url + ')<br>[commits](https://github.com/jcubic' +
-                        '/jquery.terminal/commits?author=' + contributor.login + ')';
+                        '/' + argv.r + '/commits?author=' + contributor.login + ')';
                 }).join(' | ') + ' |';
             });
             rows.splice(1, 0, align);

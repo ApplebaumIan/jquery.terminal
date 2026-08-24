@@ -30,7 +30,7 @@
  * by default only javascript markup and css languages are defined (also file extension
  * for them. To have more languages you need to include appropriate js files.
  *
- * Copyright (c) 2018-2021 Jakub Jankiewicz <https://jcubic.pl/me>
+ * Copyright (c) 2018-2026 Jakub Jankiewicz <https://jcubic.pl/me>
  * Released under the MIT license
  *
  */
@@ -83,10 +83,16 @@
         factory(root.jQuery, root.Prism);
     }
 })(function($, Prism) {
-    var Token = Prism.Token;
+    if (!$) {
+        throw new Error('jQuery Not defined');
+    }
+    if (!$.terminal) {
+        throw new Error('$.terminal is not defined');
+    }
     if (typeof Prism === 'undefined') {
         throw new Error('PrismJS not defined');
     }
+    var Token = Prism.Token;
     var _ = $.extend({}, Prism);
 
     _.Token = function() {
@@ -140,20 +146,20 @@
             return '';
         }).join('\n');
     };
-    if (!$) {
-        throw new Error('jQuery Not defined');
-    }
-    if (!$.terminal) {
-        throw new Error('$.terminal is not defined');
-    }
     // we use 0x00 character so we know which one of the formatting came from prism
     // so we can escape the reset because we unescape original values, the values
     // need to be escape in cmd plugin so you can't type in formatting
     /* eslint-disable */
     var format_split_re = /(\x00\x00\x00\x00(?:\[\[[!gbiuso]*;[^;]*;[^\]]*\](?:[^\]\\]*(\\\\)*\\\][^\]]*|[^\]]*|[^[]*\[[^\]]*)\]?|\]))/i;
     /* eslint-enable */
+    function no_target(options) {
+        if (!options) {
+            return true;
+        }
+        return Object.keys(options).length === 1 && 'position' in options;
+    }
     function should_render(options) {
-        if (!options || !Object.keys(options).length) {
+        if (no_target(options)) {
             return true;
         }
         var props = Object.keys($.terminal.prism_formatters);
@@ -191,9 +197,15 @@
         }
         if (language && _.languages[language]) {
             string = $.terminal.unescape_brackets(string);
-            var grammar = _.languages[language];
-            var tokens = _.tokenize(string, grammar);
-            string = _.Token.stringify(tokens, language);
+            var env = {
+                code: string,
+                grammar: _.languages[language],
+                language: language
+            };
+            _.hooks.run('before-tokenize', env);
+            env.tokens = _.tokenize(env.code, env.grammar);
+            _.hooks.run('after-tokenize', env);
+            string = _.Token.stringify(env.tokens, env.language);
             string = string.split(format_split_re).filter(Boolean).map(function(string) {
                 if (string.match(/^\x00/)) {
                     return string.replace(/\x00/g, '');
@@ -205,6 +217,7 @@
     };
     $.terminal.prism_formatters = {
         echo: true,
+        animation: true,
         command: true
     };
     $.terminal.syntax = function syntax(language) {

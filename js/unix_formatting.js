@@ -7,9 +7,9 @@
  *           \/              /____/
  * http://terminal.jcubic.pl
  *
- * This is example of how to create custom formatter for jQuery Terminal
+ * This is an example of how to create custom formatter for jQuery Terminal
  *
- * Copyright (c) 2014-2021 Jakub Jankiewicz <https://jcubic.pl/me>
+ * Copyright (c) 2014-2026 Jakub Jankiewicz <https://jcubic.pl/me>
  * Released under the MIT license
  *
  * Includes: node-ansiparser, MIT license, Copyright (c) 2014 Joerg Breitbart
@@ -63,12 +63,17 @@
         factory(root.jQuery);
     }
 })(function($) {
-    var DEBUG = true;
+    var DEBUG = false;
     /* eslint-disable */
     /* istanbul ignore next */
     function warn(str) {
         if ('warn' in console) {
             console.warn(str);
+        }
+    }
+    function log(str) {
+        if (DEBUG) {
+            consoel.log(str);
         }
     }
     // node-ansiparser
@@ -125,7 +130,7 @@
         var EXECUTABLES = r(0x00, 0x18);
         EXECUTABLES.push(0x19);
         EXECUTABLES.push(0x1E);
-        EXECUTABLES.concat(r(0x1c, 0x20));
+        EXECUTABLES = EXECUTABLES.concat(r(0x1c, 0x20));
 
         /* meaning of state and action indices
            var STATES = [
@@ -528,11 +533,7 @@
         };
         if (options) {
             if (options.unixFormatting) {
-                unixFormatting = $.extend({
-                    escapeBrackets: false,
-                    ansiParser: {},
-                    ansiArt: false
-                }, unixFormatting, options.unixFormatting);
+                $.extend(unixFormatting, options.unixFormatting);
             }
             if ('position' in options) {
                 unixFormatting.position = options.position;
@@ -541,10 +542,7 @@
                 unixFormatting.escapeBrackets = options.unixFormattingEscapeBrackets;
             }
             if ('ansiParser' in options) {
-                unixFormatting.ansiParser = $.extend(
-                    unixFormatting.ansiParser,
-                    options.ansiParser
-                );
+                unixFormatting.ansiParser = options.ansiParser;
             }
         }
         return unixFormatting;
@@ -597,7 +595,7 @@
                             string: match[1],
                             overtyping: partial.match(overtyping_re)
                         });
-                        correct_position(start, match[0], '', 1);
+                        correct_position(start, match[0], '');
                     }
                     if (char_count < 0) {
                         char_count = 0;
@@ -618,7 +616,7 @@
                         chars.reverse().forEach(function(char) {
                             if (i > char.index) {
                                 if (--char_count <= 0) {
-                                    correct_position(char.index, '', char.string, 2);
+                                    correct_position(char.index, '', char.string);
                                     result += char.string;
                                 }
                             } else {
@@ -1275,7 +1273,6 @@
                 }
                 this.cursor.x += s_len;
             };
-            var use_CR = !!input.match(/\x0D/);
             var term = $.terminal.active();
             var ROWS = term && term.rows() || 1000;
             var COLS = term && term.cols() || 80;
@@ -1302,6 +1299,7 @@
                 0x1E: '▲'
             };
             var characters = 'qwertyuiopasdfghjklzxcvbnm';
+            var prev_code;
             var parser_events = {
                 cursor: {x: 0, y: 0},
                 result: [],
@@ -1313,7 +1311,7 @@
                         this.cursor.x = 0;
                     } else if (code === 10) {
                         this.cursor.y++;
-                        if (!use_CR) {
+                        if (prev_code !== 13) {
                             this.cursor.x = 0;
                         }
                     } else if (code === 9) {
@@ -1332,6 +1330,7 @@
                     if (!this.result[this.cursor.y]) {
                         this.result[this.cursor.y] = '';
                     }
+                    prev_code = code;
                 },
                 inst_e: function(collected, flag) {
                     if (collected === '(') {
@@ -1409,14 +1408,16 @@
             Object.keys(settings.ansiParser).forEach(function(name) {
                 var original = parser_events[name];
                 var fn = settings.ansiParser[name];
-                parser_events[name] = original ? function() {
-                    if (fn.apply(parser_events, arguments) !== false) {
-                        return original.apply(parser_events, arguments);
-                    }
-                } : function() {
-                    return fn.apply(parser_events, arguments);
-                };
-                settings.ansiParser[name] = parser_events[name];
+                if (typeof fn === 'function') {
+                    parser_events[name] = original ? function() {
+                        if (fn.apply(parser_events, arguments) !== false) {
+                            return original.apply(parser_events, arguments);
+                        }
+                    } : function() {
+                        return fn.apply(parser_events, arguments);
+                    };
+                    settings.ansiParser[name] = parser_events[name];
+                }
             });
             var parser = new AnsiParser(parser_events);
             parser.parse(input);
@@ -1424,7 +1425,7 @@
             if (input !== output) {
                 return output;
             }
-            if (typeof options !== 'undefined' && typeof options.position === 'number') {
+            if (typeof options.position === 'number') {
                 return [input, options.position];
             }
             return input;

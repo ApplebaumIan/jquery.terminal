@@ -43,10 +43,21 @@ var obj_interpreter: JQueryTerminal.ObjectInterpreter = {
         }
     }
 };
+$('.term').terminal(Promise.resolve(obj_interpreter));
+$('.term').terminal(Promise.resolve(["foo.php", obj_interpreter]));
+$('.term').terminal([
+   "foo.pgp",
+   Promise.resolve(obj_interpreter)
+]);
 $('.term').terminal([obj_interpreter]);
 $('.term').terminal(["foo.php", obj_interpreter]);
 $('.term').terminal(["foo.php", obj_interpreter, function(command) {
 }]);
+$('.term').terminal({
+    help: function () {
+        this.echo('Help command');
+    }
+});
 
 class Foo {
     x: string;

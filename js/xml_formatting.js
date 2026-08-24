@@ -9,13 +9,14 @@
  *
  * This is example of custom formatter for jQuery Terminal
  *
- * Copyright (c) 2014-2021 Jakub Jankiewicz <https://jcubic.pl/me>
+ * Copyright (c) 2014-2026 Jakub Jankiewicz <https://jcubic.pl/me>
  * Released under the MIT license
  *
  */
 /* global define */
 (function(factory) {
     var root;
+    /* istanbul ignore next */
     if (typeof window !== 'undefined') {
         root = window;
     } else if (typeof self !== 'undefined') {
@@ -25,6 +26,7 @@
     } else {
         throw new Error('Unknow context');
     }
+    /* istanbul ignore next */
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         // istanbul ignore next
@@ -59,6 +61,7 @@
         factory(root.jQuery);
     }
 })(function($) {
+    /* istanbul ignore next */
     if (!$.terminal) {
         throw new Error('$.terminal is not defined');
     }
@@ -67,46 +70,86 @@
     // it allso support special tags e.g. link, img or bold
     var tags = {
         font: function(attrs) {
-            var style = [];
+            var styles = [];
             if ('size' in attrs) {
-                style.push('--size:' + attrs.size);
+                styles.push('--size:' + attrs.size);
             }
             if ('spacing' in attrs) {
-                style.push('letter-spacing: ' + attrs.spacing);
+                styles.push('letter-spacing: ' + attrs.spacing);
             }
-            return '[[;;;;;{"style": "' + style.join(';') + '"}]';
+            var background = attrs.background || '';
+            var color = attrs.color || '';
+            var style = styles.length ? '{"style": "' + styles.join(';') + '"}' : '';
+            return '[[;' + color + ';' + background + ';;;' + style + ']';
         },
         img: function(attrs) {
-            return '[[@;;;;' + attrs.src + ']' + (attrs.alt || '') + ']';
+            var cls = attrs.class || '';
+            var alt = attrs.alt || '';
+            var src = attrs.src || '';
+            delete attrs.alt;
+            delete attrs.class;
+            delete attrs.src;
+            var formatting = ['@', '', '', cls, src, JSON.stringify(attrs)];
+            return '[[' + formatting.join(';') + ']' + alt + ']';
         },
-        bold: function() {
-            return '[[b;rgba(255,255,255,0.9);]';
-        },
-        overline: function() {
-            return '[[o;;]';
-        },
-        strike: function() {
-            return '[[s;;]';
-        },
-        underline: function() {
-            return '[[u;;]';
-        },
-        glow: function() {
-            return '[[g;;]';
-        },
-        italic: function() {
-            return '[[i;;]';
+        bold: style('b'),
+        overline: style('o'),
+        strike: style('s'),
+        underline: style('u'),
+        glow: style('g'),
+        italic: style('i'),
+        reverse: style('r'),
+        span: function(attrs) {
+            var cls = attrs.class || '';
+            delete attrs.class;
+            var formatting = ['', '', '', cls, '', JSON.stringify(attrs)];
+            return '[[' + formatting.join(';') + ']';
         },
         link: function(attrs) {
-            return '[[!;;;;' + attrs.href + ']';
+            var cls = attrs.class || '';
+            var href = attrs.href || '';
+            delete attrs.class;
+            delete attrs.href;
+            var formatting = ['!', '', '', cls, href, JSON.stringify(attrs)];
+            return '[[' + formatting.join(';') + ']';
         }
     };
+    function style(value) {
+        return function(attrs) {
+            var cls = attrs.class || '';
+            delete attrs.class;
+            var formatting = [value, '', '', cls, '', JSON.stringify(attrs)];
+            return '[[' + formatting.join(';') + ']';
+        };
+    }
     // short aliases
     tags.b = tags.bold;
     tags.a = tags.link;
     tags.i = tags.italic;
-    var tag_re = /(<\/?\s*[a-zA-Z]+(?: [^>]+)?>)/;
-    function xml_formatter(string) {
+    tags.r = tags.reverse;
+    var tag_re = /(<\/?\s*[a-zA-Z]+(?:\s?[^>]+)?>)/;
+    function no_target(options) {
+        if (!options) {
+            return true;
+        }
+        return Object.keys(options).length === 1 && 'position' in options;
+    }
+    function should_render(options) {
+        if (no_target(options)) {
+            return true;
+        }
+        for (var i = targets.length; i--;) {
+            var prop = targets[i];
+            if (options[prop] === true && $.terminal.xml_formatter[prop] === true) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function xml_formatter(string, options) {
+        if (!should_render(options)) {
+            return string;
+        }
         return string.split(tag_re).map(function(string) {
             if (string.match(tag_re)) {
                 if (string[1] === '/') {
@@ -114,11 +157,15 @@
                 }
                 string = string.replace(/^<|>$/g, '');
                 var m = string.match(/^([a-zA-Z]+)(?:\s*(.+))?/);
+                if (!m) {
+                    // invalid XML
+                    return string;
+                }
                 var name = m[1].toLowerCase();
                 var attrs = {};
                 if (m[2]) {
                     var string_attrs = m[2];
-                    var re = /([a-zA-Z]+)\s*=\s*"([^"]+)"/g;
+                    var re = /([\w-]+)\s*=\s*"([^"]+)"/g;
                     var match;
                     while (match = re.exec(string_attrs)) {
                         var attr_name = match[1];
@@ -129,17 +176,23 @@
                 if (tags[name]) {
                     return tags[name](attrs);
                 } else {
-                    return '[[;' + name + ';]';
+                    var cls = attrs.class || '';
+                    var formatting = ['', name, '', cls, '', JSON.stringify(attrs)];
+                    return '[[' + formatting.join(';') + ']';
                 }
             }
-            return string;
+            return string.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
         }).join('');
     }
     xml_formatter.__no_warn__ = true;
     xml_formatter.tags = tags;
+
+    var targets = ['echo', 'prompt', 'animation', 'command'];
+    targets.forEach(function(target) {
+        xml_formatter[target] = true;
+    });
+
     $.terminal.defaults.allowedAttributes.push('style');
     $.terminal.xml_formatter = xml_formatter;
     $.terminal.new_formatter(xml_formatter);
 });
-
-

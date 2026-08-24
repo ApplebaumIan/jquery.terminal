@@ -30,15 +30,19 @@
   "contributors": [
     {
       "name": "Jakub T. Jankiewicz",
-      "url": "https://jcubic.pl/me"
+      "url": "https://jakub.jankiewicz.org/"
     },
     {
-      "name": "Hood Chatham",
-      "url": "https://github.com/hoodmane"
+      "name": "Riccardo Mura",
+      "url": "https://github.com/cowuake"
     },
     {
-      "name": "Zuo Qy",
-      "url": "http://zuoqy.com"
+      "name": "Jean-Michel Carrel",
+      "url": "https://github.com/Neyxo"
+    },
+    {
+      "name": "kid1412z",
+      "url": "https://github.com/kid1412z"
     },
     {
       "name": "Marcel Link",
@@ -57,96 +61,132 @@
       "url": "https://github.com/johanjordaan"
     },
     {
+      "name": "Snyk bot",
+      "url": "https://snyk.io"
+    },
+    {
       "name": "Florian Schäfer",
       "url": "https://github.com/fschaefer"
     },
     {
-      "name": "David Refoua",
-      "url": "http://www.Refoua.me"
+      "name": "Tomasz Ducin",
+      "url": "ducin.dev"
+    },
+    {
+      "name": "Qijia Liu",
+      "url": "https://github.com/eagleoflqj"
     },
     {
       "name": "Ishan Ratnapala",
       "url": "https://github.com/IshanRatnapala"
     },
     {
-      "name": "Tomasz Ducin",
-      "url": "http://ducin.it"
+      "name": "David Refoua",
+      "url": "http://www.refoua.me"
     },
     {
-      "name": "7twin",
-      "url": "https://7twin.com"
+      "name": "Antoine",
+      "url": "https://github.com/antoineol"
     },
     {
-      "name": "Abdelrahman Omran",
-      "url": "https://omranic.com"
-    },
-    {
-      "name": "Anton Vasil'ev",
-      "url": "https://github.com/avdes"
-    },
-    {
-      "name": "finlob",
-      "url": "https://github.com/finlob"
-    },
-    {
-      "name": "Hasan",
-      "url": "juanpota.to"
-    },
-    {
-      "name": "Hraban Luyat",
-      "url": "https://luyat.com"
-    },
-    {
-      "name": "Jarry Shaw",
-      "url": "https://jarryshaw.me"
-    },
-    {
-      "name": "Jon Steinich",
-      "url": "https://github.com/jsteinich"
-    },
-    {
-      "name": "Martin v. Löwis",
-      "url": "https://github.com/loewis"
-    },
-    {
-      "name": "Mateusz Paprocki",
-      "url": "https://github.com/mattpap"
-    },
-    {
-      "name": "exit1",
-      "url": "https://github.com/exit1"
-    },
-    {
-      "name": "Robert Wikman",
-      "url": "https://github.com/rbw"
-    },
-    {
-      "name": "Steve Phillips",
-      "url": "https://tryingtobeawesome.com/"
-    },
-    {
-      "name": "Yutong Luo",
-      "url": "https://yutongluo.com"
-    },
-    {
-      "name": "coderaiser",
-      "url": "http://coderaiser.github.io"
-    },
-    {
-      "name": "mrkaiser",
-      "url": "https://github.com/mrkaiser"
-    },
-    {
-      "name": "stereobooster",
-      "url": "https://stereobooster.com"
+      "name": "youurayy",
+      "url": "https://github.com/youurayy"
     },
     {
       "name": "Steve Kirkegard",
       "url": "https://www.linkedin.com/in/steve-kirkegard"
     },
     {
-      "name": "Juraj Vitko",
-      "url": "https://github.com/youurayy"
+      "name": "stereobooster",
+      "url": "https://stereobooster.com"
+    },
+    {
+      "name": "Dev Kumar Gupta",
+      "url": "https://github.com/mrkaiser"
+    },
+    {
+      "name": "dependabot[bot]",
+      "url": "https://github.com/dependabot[bot]"
+    },
+    {
+      "name": "coderaiser",
+      "url": "http://coderaiser.github.io"
+    },
+    {
+      "name": "Yutong Luo",
+      "url": "https://yutongluo.com"
+    },
+    {
+      "name": "Steve Phillips",
+      "url": "https://tryingtobeawesome.com/"
+    },
+    {
+      "name": "Robert W",
+      "url": "https://github.com/rbw"
+    },
+    {
+      "name": "exit1",
+      "url": "https://github.com/exit1"
+    },
+    {
+      "name": "Mateusz Paprocki",
+      "url": "https://github.com/mattpap"
+    },
+    {
+      "name": "Martin v. Löwis",
+      "url": "https://github.com/loewis"
+    },
+    {
+      "name": "Kushal",
+      "url": "kushalsm.com"
+    },
+    {
+      "name": "KiddoV",
+      "url": "https://github.com/KiddoV"
+    },
+    {
+      "name": "Jon Steinich",
+      "url": "https://github.com/jsteinich"
+    },
+    {
+      "name": "John Jarvis",
+      "url": "http://www.jarv.org"
+    },
+    {
+      "name": "Jarry Shaw",
+      "url": "https://jarryshaw.me"
+    },
+    {
+      "name": "jpaye",
+      "url": "https://github.com/jpaye"
+    },
+    {
+      "name": "Hraban",
+      "url": "https://br0g.0brg.net"
+    },
+    {
+      "name": "Hasan",
+      "url": "https://github.com/JuanPotato"
+    },
+    {
+      "name": "finlob",
+      "url": "https://github.com/finlob"
+    },
+    {
+      "name": "Ezinne Anne Emilia",
+      "url": "https://ezinneanneemilia.netlify.app"
+    },
+    {
+      "name": "Anton Vasilev",
+      "url": "https://github.com/avdes"
+    },
+    {
+      "name": "Abdelrahman Omran",
+      "url": "https://omranic.com"
+    },
+    {
+      "name": "7twin",
+      "url": "https://github.com/7twin"
     }
   ],
   "license": "MIT",

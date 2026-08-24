@@ -9,7 +9,7 @@
  *
  * This is object enchancment that will add pipe operator and redirects to commands
  *
- * Copyright (c) 2014-2021 Jakub Jankiewicz <https://jcubic.pl/me>
+ * Copyright (c) 2014-2026 Jakub Jankiewicz <https://jcubic.pl/me>
  * Released under the MIT license
  *
  */
@@ -59,6 +59,13 @@
         factory(root.jQuery);
     }
 })(function($) {
+    var DEBUG = false;
+    function log(str) {
+        if (DEBUG) {
+            // eslint-disable-next-line
+            console.log(str);
+        }
+    }
     // -----------------------------------------------------------------------------------
     // :: split over array - returns array of arrays
     // -----------------------------------------------------------------------------------
@@ -115,7 +122,7 @@
         var settings = $.extend({
             processArguments: true,
             overwrite: undefined,
-            redirects: {}
+            redirects: []
         }, options);
         var overwrite_buffer;
         var term;
@@ -239,7 +246,10 @@
             return defer.promise();
         }
         // -------------------------------------------------------------------------------
-        function continuation(promise, callback) {
+        function continuation(promise, callback, debug_log) {
+            if (debug_log) {
+                log(debug_log);
+            }
             if (promise && promise.then) {
                 promise.then(callback);
                 return promise;
@@ -260,13 +270,14 @@
         // -------------------------------------------------------------------------------
         function make_tty() {
             var tty = {
+                buffer: [],
                 read: function(message, callback) {
                     // in case we return read() call from interpreter
                     // we can't access force_awake flag in term (it's invoked later)
                     if (term.paused()) {
                         term.resume();
                     }
-                    if ((command_index === 0 && !tty.buffer) || process_redirect) {
+                    if ((command_index === 0 && !tty.buffer.length) || process_redirect) {
                         term.push = orig.push;
                         term.echo = orig.echo;
                         var ret = orig.read.apply(term, arguments);
@@ -277,9 +288,9 @@
                         });
                     } else {
                         var text;
-                        if (tty.buffer) {
-                            text = tty.buffer.replace(/\n$/, '');
-                            delete tty.buffer;
+                        if (tty.buffer.length) {
+                            text = tty.buffer.join('\n');
+                            tty.buffer.length = 0;
                         }
                         var d = new $.Deferred();
                         if (is_function(callback)) {
@@ -289,12 +300,17 @@
                         return d.promise();
                     }
                 },
-                echo: function(string) {
+                echo: function(string, options) {
                     if (overwrite_buffer) {
                         overwrite_buffer = false;
-                        tty.buffer = '';
+                        tty.buffer.length = 0;
                     }
-                    tty.buffer = (tty.buffer || '') + string + '\n';
+                    tty.options = tty.options || [];
+                    tty.options.push(options);
+                    tty.buffer.push(string);
+                },
+                last_index: function() {
+                    return orig.last_index() + tty.buffer.length;
                 },
                 push: function() {
                     this.error(strings(this).pipeNestedInterpreterError);
@@ -328,12 +344,22 @@
         }
         // -------------------------------------------------------------------------------
         function stringify(cmd) {
+            if (!cmd.name) {
+                return '';
+            }
             return cmd.name + ' ' + cmd.args.map(function(arg, i) {
                 if (cmd.args_quotes[i]) {
                     var quote = cmd.args_quotes[i];
-                    return quote + unparse(arg) + quote;
+                    var result = unparse(arg);
+                    if (quote === '"' && result.match(/\\'/)) {
+                        result = result.replace(/\\'/g, "'");
+                    }
+                    return quote + result + quote;
                 }
-                return arg.replace(/ /g, '\\ ');
+                if (typeof arg === 'string') {
+                    return arg.replace(/ /g, '\\ ');
+                }
+                return arg;
             }).join(' ');
         }
         // -------------------------------------------------------------------------------
@@ -345,7 +371,8 @@
                 orig = {
                     echo: term.echo,
                     read: term.read,
-                    push: term.push
+                    push: term.push,
+                    last_index: term.last_index
                 };
             }
             var tty = make_tty();
@@ -379,7 +406,7 @@
             if (single_command(commands)) {
                 var cmd = commands[0];
                 if (is_function(interpreter)) {
-                    return interpreter.call(term, stringify(cmd), term);
+                    return interpreter.call(term, command, term);
                 } else if (is_function(interpreter[cmd.name])) {
                     return interpreter[cmd.name].apply(term, cmd.args);
                 } else if ($.isPlainObject(interpreter[cmd.name])) {
@@ -388,12 +415,15 @@
                         name: cmd.name,
                         completion: Object.keys(interpreter[cmd.name])
                     });
-                } else if (is_function(term_settings.onCommandNotFound)) {
-                    term_settings.onCommandNotFound.call(term, command, term);
-                } else {
-                    error(sprintf(strings(term).commandNotFound, cmd.name));
+                } else if (cmd.name) {
+                    if (is_function(term_settings.onCommandNotFound)) {
+                        term_settings.onCommandNotFound.call(term, command, term);
+                    } else {
+                        error(sprintf(strings(term).commandNotFound, cmd.name));
+                    }
                 }
             } else {
+                //term = term.duplicate();
                 $.extend(term, tty);
                 var stop_error = false;
                 var promise = loop(function(cmd) {
@@ -434,6 +464,34 @@
                 });
                 return promise.then(function() {
                     $.extend(term, orig);
+                    var orig_echo = orig.echo;
+                    term.echo = function(arg, options, deferred) {
+                        try {
+                            var settings = options;
+                            if (tty.options && tty.options.length) {
+                                var onClear = function() {
+                                    if (settings && settings.onClear) {
+                                        settings.onClear();
+                                    }
+                                    tty.options.forEach(function(options) {
+                                        if (options && options.onClear) {
+                                            options.onClear();
+                                        }
+                                    });
+                                };
+                                options = $.extend({onClear: onClear}, options);
+                            }
+                            var ret = orig.echo(arg, options, deferred);
+                            term.echo = orig_echo;
+                            return ret;
+                        } catch (e) {
+                            /* eslint-disable no-console */
+                            console.error(e.message);
+                            console.error(e.stack);
+                            /* eslint-enable no-console */
+                            return term;
+                        }
+                    };
                 });
             }
         };
